@@ -3,15 +3,17 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const defaultErrMessage = require('../db/mongoose_message');
+
 const userSchema = new mongoose.Schema({
     full_name: {
         type: String,
-        required: [true, 'Why no bacon?'],
+        required: [true, defaultErrMessage.required],
         trim: true,
     },
     current_address: {
         type: String,
-        required: [true, 'Why no current_address?'],
+        required: [true, defaultErrMessage.required],
         trim: true,
     },
     account_status: {
@@ -28,8 +30,8 @@ const userSchema = new mongoose.Schema({
     },
     email_address: {
         type: String,
-        unique: true,
-        required: [true, 'Why no email?'],
+        unique: [true, 'asd'],
+        required: [true, defaultErrMessage.required],
         trim: true,
         lowercase: true,
         validate(value) {
@@ -42,6 +44,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         uppercase: true,
+        default: 'UNVERIFIED',
         validate(value) {
             account_status = ['UNVERIFIED', 'VERIFIED'];
             if (!account_status.includes(value)) {
@@ -52,13 +55,14 @@ const userSchema = new mongoose.Schema({
     phone_number: {
         type: String,
         unique: true,
-        required: [true, 'Why no phone_number?'],
+        required: [true, defaultErrMessage.required],
         trim: true,
     },
     phone_number_verify_status: {
         type: String,
-        required: true,
+        required: [true, defaultErrMessage.required],
         uppercase: true,
+        default: 'UNVERIFIED',
         validate(value) {
             account_status = ['UNVERIFIED', 'VERIFIED'];
             if (!account_status.includes(value)) {

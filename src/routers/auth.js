@@ -16,15 +16,18 @@ const router = new express.Router();
  */
 router.post('/users', api, async (req, res) => {
 
-    //? Take all request body, and save it to User Model
-    const user = new User(req.body)
+    const user = new User(req.body) // Take all request body, and save it to User Model
 
     try {
         await user.save()
 
-        res.status(201).send(user)
+        res.respMessage.success = true;
+        res.status(201).send(res.respMessage)
     } catch (e) {
-        res.respMessage.message = e.message;
+        for (const [key, value] of Object.entries(e.errors)) {
+            res.respMessage.message = res.respMessage.message.concat(`${req.t(value)}: ${key}`);
+            break;
+        }
         res.status(400).send(res.respMessage)
     }
 });
