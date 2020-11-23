@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         uppercase: true,
+        default: 'ACTIVE',
         validate(value) {
             account_status = ['ACTIVE', 'INACTIVE'];
             if (!account_status.includes(value)) {
