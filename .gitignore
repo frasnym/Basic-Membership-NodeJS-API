@@ -6,4 +6,4 @@ npm-debug.log
 .DS_Store
 
 # This
-config
+config/dev.env
