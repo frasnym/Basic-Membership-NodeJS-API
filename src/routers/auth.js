@@ -1,7 +1,7 @@
 const express = require('express');
 
 const User = require('../models/user');
-const api = require('../middleware/api')
+const { api, errorManipulator } = require('../middleware/api')
 
 const router = new express.Router();
 
@@ -24,10 +24,7 @@ router.post('/users', api, async (req, res) => {
         res.respMessage.success = true;
         res.status(201).send(res.respMessage)
     } catch (e) {
-        for (const [key, value] of Object.entries(e.errors)) {
-            res.respMessage.message = res.respMessage.message.concat(`${req.t(value)}: ${key}`);
-            break;
-        }
+        res.respMessage = errorManipulator(e, req, res.respMessage)
         res.status(400).send(res.respMessage)
     }
 });

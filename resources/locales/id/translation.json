@@ -1,4 +1,10 @@
 {
     "greeting": "halo dunia!",
-    "ParameterValueRequired": "Nilai parameter diperlukan"
+    "ParameterValueRequired": "Nilai parameter diperlukan",
+    "DataRegisteredPleaseProvideAnotherValue": "Data sudah terdaftar, mohon menggunakand data lain: ",
+    "full_name": "nama lengkap",
+    "current_address": "alamat rumah",
+    "email_address": "alamat surat elektrik",
+    "phone_number": "nomor telepon",
+    "password": "kata sandi"
 }
