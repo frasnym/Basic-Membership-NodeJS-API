@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
-                throw new Error('Invalid email')
+                throw new Error('InvalidEmailAddressFormat')
             }
         },
     },
@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
         validate(value) {
             account_status = ['UNVERIFIED', 'VERIFIED'];
             if (!account_status.includes(value)) {
-                throw new Error('Invalid email_address_verify_status')
+                throw new Error('StatusValueNotIdentified')
             }
         },
     },
@@ -57,6 +57,11 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: [true, defaultErrMessage.required],
         trim: true,
+        validate(value) {
+            if (!value.startsWith('62')) {
+                throw new Error('InvalidPhoneNumberFormat')
+            }
+        },
     },
     phone_number_verify_status: {
         type: String,
@@ -66,7 +71,7 @@ const userSchema = new mongoose.Schema({
         validate(value) {
             account_status = ['UNVERIFIED', 'VERIFIED'];
             if (!account_status.includes(value)) {
-                throw new Error('Invalid phone_number_verify_status')
+                throw new Error('StatusValueNotIdentified')
             }
         },
     },
@@ -95,13 +100,13 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 })
 
-/**
- * Uniqueness in Mongoose is not a validation parameter (like required); it tells Mongoose to create a unique index in MongoDB for that field
- * You have to handle these errors yourself if you want to create custom error messages. The Mongoose documentation ("Error Handling Middleware") provides you with an example on how to create custom error handling:
- * https://mongoosejs.com/docs/middleware.html#error-handling-middleware
- */
 userSchema.post('save', function (error, doc, next) {
 
+    /**
+     * Uniqueness in Mongoose is not a validation parameter (like required); it tells Mongoose to create a unique index in MongoDB for that field
+     * You have to handle these errors yourself if you want to create custom error messages. The Mongoose documentation ("Error Handling Middleware") provides you with an example on how to create custom error handling:
+     * https://mongoosejs.com/docs/middleware.html#error-handling-middleware
+     */
     if (error.name === 'MongoError' && error.code === 11000) {
         // console.log(error)
         // console.log(Object.keys(error.keyPattern).toString())
@@ -109,6 +114,16 @@ userSchema.post('save', function (error, doc, next) {
     } else {
         next();
     }
+});
+
+userSchema.pre('save', async function (next) {
+    const user = this
+
+    if (user.isModified('phone_number')) { // Check if column is modified
+        user.phone_number = `(${user.phone_number.substr(0, 2)})${user.phone_number.substr(2)}`; // Insert brackets "()" on phone code
+    }
+
+    next(); // Done with the function
 });
 
 const User = mongoose.model('User', userSchema)
