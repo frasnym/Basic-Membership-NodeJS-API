@@ -123,8 +123,25 @@ userSchema.pre('save', async function (next) {
         user.phone_number = `(${user.phone_number.substr(0, 2)})${user.phone_number.substr(2)}`; // Insert brackets "()" on phone code
     }
 
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 8);
+    }
+
     next(); // Done with the function
 });
+
+/**
+ ** Hide credentials data on API response
+ */
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
 
 const User = mongoose.model('User', userSchema)
 

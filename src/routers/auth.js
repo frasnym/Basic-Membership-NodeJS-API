@@ -22,7 +22,6 @@ router.post('/users', api, async (req, res) => {
         await user.save()
 
         res.respMessage.success = true;
-        res.respMessage.data = user;
         res.respMessage.message = req.t('ProcessSuccess');
         res.status(201).send(res.respMessage)
     } catch (e) {
