@@ -57,12 +57,6 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: [true, defaultErrMessage.required],
         trim: true,
-        // TODO Custom Validation
-        // validate(value) {
-        //     if (!value.startsWith('62')) {
-        //         throw new Error('InvalidPhoneNumberFormat')
-        //     }
-        // },
     },
     phone_number_verify_status: {
         type: String,
