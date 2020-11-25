@@ -79,12 +79,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 7,
-        trim: true,
-        validate(value) {
-            if (value.toLowerCase().includes('password')) {
-                throw new Error('Password cannot contain "password"')
-            }
-        }
+        trim: true
     },
     tokens: [{
         token: {
@@ -94,6 +89,15 @@ const userSchema = new mongoose.Schema({
         user_agent: {
             type: String,
             required: true,
+        },
+        ip_address: {
+            type: String,
+            required: true,
+            validate(value) {
+                if (!value.isIP()) {
+                    throw new Error('InvalidIPAddressFormat')
+                }
+            }
         },
     }],
 }, {
@@ -141,6 +145,42 @@ userSchema.methods.toJSON = function () {
     delete userObject.tokens
 
     return userObject
+}
+
+// ? Define custom methods instance
+userSchema.methods.generateAuthToken = async function () {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+
+    user.tokens = user.tokens.concat({ token })
+    // user.tokens = user.tokens.concat({ token: token })
+    await user.save()
+
+    return token;
+}
+
+/**
+ * To lookup user data by it's email & password, preferable for login
+ * @param {String} email : User posted email
+ * @param {String} password : User posted password
+ */
+userSchema.statics.findbyCredentials = async (email, password) => {
+
+    // const user = await User.findOne({ email:email })
+    const user = await User.findOne({ email, account_status: 'ACTIVE' });
+
+    if (!user) {
+        throw new Error('ERRORMIDDLEWARE.LOGIN.');
+        // throw new Error('UnableToLogin')
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password) // Check password with hash
+    if (!isMatch) {
+        throw new Error('ERRORMIDDLEWARE.LOGIN.');
+        // throw new Error('UnableToLogin')
+    }
+
+    return user
 }
 
 const User = mongoose.model('User', userSchema)

@@ -2,13 +2,16 @@
     "greeting": "halo dunia!",
     "ParameterValueRequired": "Nilai parameter diperlukan",
     "DataRegisteredPleaseProvideAnotherValue": "Data sudah terdaftar, mohon menggunakand data lain: ",
+    "StatusValueNotIdentified": "Nilai status tidak teridentifikasi",
     "InvalidEmailAddressFormat": "Format alamat surat elektrik salah",
     "InvalidPhoneNumberFormat": "Format nomor telepon salah",
-    "StatusValueNotIdentified": "Nilai status tidak teridentifikasi",
+    "InvalidIPAddressFormat": "Format alamat IP salah",
+    "UnableToLogin": "Login gagal",
     "ProcessSuccess": "Proses berhasil",
     "full_name": "nama lengkap",
     "current_address": "alamat rumah",
     "email_address": "alamat surat elektrik",
     "phone_number": "nomor telepon",
-    "password": "kata sandi"
+    "password": "kata sandi",
+    "ip_address": "alamat IP"
 }
