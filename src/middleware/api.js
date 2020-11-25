@@ -6,7 +6,7 @@ const { validationResult } = require('express-validator');
  * @param {Response} res : API Response parameter
  * @param {Function} next : Next Function
  */
-const responseTemplate = async (req, res, next) => {
+const setResponseTemplate = async (req, res, next) => {
     res.respMessage = {
         success: false,
         message: '',
@@ -60,7 +60,7 @@ const inputBodyValidator = async (req, res, next) => {
 }
 
 module.exports = {
-    responseTemplate,
+    setResponseTemplate,
     inputBodyValidator,
     errorManipulator,
 }
