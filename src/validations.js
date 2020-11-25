@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, header } = require('express-validator');
 
 const registerRules = [
     body('full_name').notEmpty().withMessage('ParameterValueRequired'),
@@ -9,6 +9,7 @@ const registerRules = [
 ];
 
 const loginRules = [
+    header('user-agent').notEmpty().withMessage('ParameterValueRequired'),
     body('email_address').isEmail().withMessage('InvalidEmailAddressFormat'),
     body('password').notEmpty().withMessage('ParameterValueRequired'),
     body('ip_address').isIP().withMessage('InvalidIPAddressFormat'),

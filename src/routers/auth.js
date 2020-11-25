@@ -24,10 +24,10 @@ router.post('/users', v.registerRules, api.setResponseTemplate, api.inputBodyVal
 
         res.respMessage.success = true;
         res.respMessage.message = req.t('ProcessSuccess');
-        res.status(201).send(res.respMessage)
+        res.status(201).send(res.respMessage);
     } catch (e) {
-        res.respMessage = api.errorManipulator(e, req, res.respMessage)
-        res.status(400).send(res.respMessage)
+        res.respMessage = api.errorManipulator(e, req, res.respMessage);
+        res.status(400).send(res.respMessage);
     }
 });
 
@@ -39,18 +39,18 @@ router.post('/users', v.registerRules, api.setResponseTemplate, api.inputBodyVal
  * @param: ip_address
  */
 router.post('/users/login', v.loginRules, api.setResponseTemplate, api.inputBodyValidator, async (req, res) => {
-
     try {
-        const user = await User.findbyCredentials(req.body.email, req.body.password)
-        // const token = await user.generateAuthToken()
+        const user = await User.findbyCredentials(req.body.email_address, req.body.password);
+        const token = await user.generateAuthToken(req.get('User-Agent'), req.body.ip_address);
 
         res.respMessage.success = true;
         res.respMessage.message = req.t('ProcessSuccess');
         res.respMessage.data = user;
-        return res.status(200).send(res.respMessage)
+        res.respMessage.token = token;
+        return res.status(200).send(res.respMessage);
     } catch (e) {
         res.respMessage = api.errorManipulator(e, req, res.respMessage)
-        return res.status(404).send(res.respMessage)
+        return res.status(404).send(res.respMessage);
     }
 });
 

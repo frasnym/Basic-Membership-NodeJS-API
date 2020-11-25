@@ -57,11 +57,12 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: [true, defaultErrMessage.required],
         trim: true,
-        validate(value) {
-            if (!value.startsWith('62')) {
-                throw new Error('InvalidPhoneNumberFormat')
-            }
-        },
+        // TODO Custom Validation
+        // validate(value) {
+        //     if (!value.startsWith('62')) {
+        //         throw new Error('InvalidPhoneNumberFormat')
+        //     }
+        // },
     },
     phone_number_verify_status: {
         type: String,
@@ -94,7 +95,7 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true,
             validate(value) {
-                if (!value.isIP()) {
+                if (!validator.isIP(value)) {
                     throw new Error('InvalidIPAddressFormat')
                 }
             }
@@ -147,37 +148,46 @@ userSchema.methods.toJSON = function () {
     return userObject
 }
 
-// ? Define custom methods instance
-userSchema.methods.generateAuthToken = async function () {
+/**
+ * Generate token as a sign that user is logged in
+ * @param {String} user_agent : User's agent from request headers
+ * @param {String} ip_address : User's ip_address from request body
+ */
+userSchema.methods.generateAuthToken = async function (user_agent, ip_address) {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
 
-    user.tokens = user.tokens.concat({ token })
-    // user.tokens = user.tokens.concat({ token: token })
-    await user.save()
+    const findIndex = user.tokens.findIndex((token_doc) => {
+        return token_doc.user_agent === user_agent;
+    });
+
+    if (findIndex < 0) { // Index not found = create new
+        user.tokens = user.tokens.concat({ token, user_agent, ip_address });
+    } else { // Index found = update it
+        user.tokens[findIndex] = { token, user_agent, ip_address };
+    }
+    await user.save();
 
     return token;
 }
 
 /**
  * To lookup user data by it's email & password, preferable for login
- * @param {String} email : User posted email
- * @param {String} password : User posted password
+ * @param {String} email_address : User's email from request body
+ * @param {String} password : User's password from request body
  */
-userSchema.statics.findbyCredentials = async (email, password) => {
+userSchema.statics.findbyCredentials = async (email_address, password) => {
 
-    // const user = await User.findOne({ email:email })
-    const user = await User.findOne({ email, account_status: 'ACTIVE' });
+    // const user = await User.findOne({ email_address:email_address })
+    const user = await User.findOne({ email_address, account_status: 'ACTIVE' }); // Find user with email_address and account_status
 
     if (!user) {
         throw new Error('ERRORMIDDLEWARE.LOGIN.');
-        // throw new Error('UnableToLogin')
     }
 
     const isMatch = await bcrypt.compare(password, user.password) // Check password with hash
     if (!isMatch) {
         throw new Error('ERRORMIDDLEWARE.LOGIN.');
-        // throw new Error('UnableToLogin')
     }
 
     return user
