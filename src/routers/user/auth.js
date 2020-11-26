@@ -1,9 +1,9 @@
 const express = require('express');
 
-const User = require('../models/user');
-const api = require('../middleware/api')
-const auth = require('../middleware/auth')
-const v = require('../validations');
+const User = require('../../models/user');
+const api = require('../../middleware/api');
+const auth = require('../../middleware/auth');
+const v = require('../../validations');
 
 const router = new express.Router();
 

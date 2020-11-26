@@ -4,6 +4,10 @@ const User = require('../models/user');
 
 const auth = async (req, res, next) => {
     try {
+        if (!req.header('Authorization')) {
+            throw new Error('PleaseAuthenticate');
+        }
+
         const Authorization = req.header('Authorization').split(' ');
         const token = Authorization[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
+const mongoose = require('mongoose');
+const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -120,6 +120,11 @@ userSchema.pre('save', async function (next) {
 
     if (user.isModified('phone_number')) { // Check if column is modified
         user.phone_number = `(${user.phone_number.substr(0, 2)})${user.phone_number.substr(2)}`; // Insert brackets "()" on phone code
+        user.phone_number_verify_status = 'UNVERIFIED'; // change phone_number_verify_status every updating phone_number
+    }
+
+    if (user.isModified('email_address')) {
+        user.email_address_verify_status = 'UNVERIFIED'; // change email_address_verify_status every updating email_address
     }
 
     if (user.isModified('password')) {
