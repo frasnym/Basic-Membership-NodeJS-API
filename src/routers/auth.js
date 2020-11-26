@@ -57,7 +57,7 @@ router.post('/users/login', v.loginRules, api.setResponseTemplate, api.inputBody
 
 /**
  ** Logout
- GET /users/login
+ GET /users/logout
  */
 router.get('/users/logout', api.setResponseTemplate, auth, async (req, res) => {
     try {
@@ -65,6 +65,45 @@ router.get('/users/logout', api.setResponseTemplate, auth, async (req, res) => {
             return token.token !== req.token
         })
         await req.user.save()
+
+        res.respMessage.success = true;
+        res.respMessage.message = req.t('ProcessSuccess');
+        return res.status(200).send(res.respMessage);
+    } catch (e) {
+        res.respMessage = api.errorManipulator(e, req, res.respMessage)
+        return res.status(500).send(res.respMessage);
+    }
+});
+
+/**
+ ** Logout Other
+ GET /users/logout_other
+ */
+router.get('/users/logout_other', api.setResponseTemplate, auth, async (req, res) => {
+    try {
+        const findIndex = req.user.tokens.findIndex((token_doc) => {
+            return token_doc.token === req.token;
+        });
+        req.user.tokens = req.user.tokens[findIndex];
+        await req.user.save();
+
+        res.respMessage.success = true;
+        res.respMessage.message = req.t('ProcessSuccess');
+        return res.status(200).send(res.respMessage);
+    } catch (e) {
+        res.respMessage = api.errorManipulator(e, req, res.respMessage)
+        return res.status(500).send(res.respMessage);
+    }
+});
+
+/**
+ ** Logout All
+ GET /users/logout_all
+ */
+router.get('/users/logout_all', api.setResponseTemplate, auth, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        await req.user.save();
 
         res.respMessage.success = true;
         res.respMessage.message = req.t('ProcessSuccess');

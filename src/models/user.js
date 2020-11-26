@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     account_status: {
         type: String,
-        required: true,
+        required: [true, defaultErrMessage.required],
         uppercase: true,
         default: 'ACTIVE',
         validate(value) {
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     },
     email_address_verify_status: {
         type: String,
-        required: true,
+        required: [true, defaultErrMessage.required],
         uppercase: true,
         default: 'UNVERIFIED',
         validate(value) {
@@ -79,15 +79,15 @@ const userSchema = new mongoose.Schema({
     tokens: [{
         token: {
             type: String,
-            required: true,
+            required: [true, defaultErrMessage.required],
         },
         user_agent: {
             type: String,
-            required: true,
+            required: [true, defaultErrMessage.required],
         },
         ip_address: {
             type: String,
-            required: true,
+            required: [true, defaultErrMessage.required],
             validate(value) {
                 if (!validator.isIP(value)) {
                     throw new Error('InvalidIPAddressFormat')
