@@ -2,6 +2,7 @@ const express = require('express');
 
 const User = require('../models/user');
 const api = require('../middleware/api')
+const auth = require('../middleware/auth')
 const v = require('../validations');
 
 const router = new express.Router();
@@ -51,6 +52,26 @@ router.post('/users/login', v.loginRules, api.setResponseTemplate, api.inputBody
     } catch (e) {
         res.respMessage = api.errorManipulator(e, req, res.respMessage)
         return res.status(404).send(res.respMessage);
+    }
+});
+
+/**
+ ** Logout
+ GET /users/login
+ */
+router.get('/users/logout', api.setResponseTemplate, auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        })
+        await req.user.save()
+
+        res.respMessage.success = true;
+        res.respMessage.message = req.t('ProcessSuccess');
+        return res.status(200).send(res.respMessage);
+    } catch (e) {
+        res.respMessage = api.errorManipulator(e, req, res.respMessage)
+        return res.status(500).send(res.respMessage);
     }
 });
 

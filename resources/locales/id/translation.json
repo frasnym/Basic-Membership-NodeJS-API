@@ -7,6 +7,7 @@
     "InvalidPhoneNumberFormat": "Format nomor telepon salah",
     "InvalidIPAddressFormat": "Format alamat IP salah",
     "UnableToLogin": "Login gagal",
+    "PleaseAuthenticate": "Mohon untuk melakukan otentikasi",
     "ProcessSuccess": "Proses berhasil",
     "full_name": "nama lengkap",
     "current_address": "alamat rumah",
