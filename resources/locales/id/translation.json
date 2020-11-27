@@ -11,6 +11,8 @@
     "InvalidOperation": "Operasi tidak valid",
     "AccountInactive": "Akun tidak aktif",
     "ProcessSuccess": "Proses berhasil",
+    "ProcessCannotBeDone": "Proses tidak dapat dilakukan",
+    "AccountEmailAddressVerified": "Alamat surat elektrik sudah diverifikasi",
     "full_name": "nama lengkap",
     "current_address": "alamat rumah",
     "email_address": "alamat surat elektrik",
