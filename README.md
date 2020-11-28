@@ -5,12 +5,14 @@ Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 ## Features
 
 <ol>
-    <li>Global template response message</li>
-    <li>Multi language response message</li>
+    <li><b>Global template response message</b></li>
+    <li><b>Multi language response message</b></li>
     <li>Generate random alphanumeric for key</li>
-    <li>Encrypt and Decrypt function for key</li>
+    <li><b>Encrypt and Decrypt function</b></li>
     <li>Register</li>
+    <li><b>Hash password</b></li>
     <li>Login</li>
+    <li><b>Bearer Auth</b></li>
     <li>Logout</li>
     <li>Logout Other</li>
     <li>Logout All</li>
