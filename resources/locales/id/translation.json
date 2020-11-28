@@ -13,6 +13,7 @@
     "ProcessSuccess": "Proses berhasil",
     "ProcessCannotBeDone": "Proses tidak dapat dilakukan",
     "AccountEmailAddressVerified": "Alamat surat elektrik sudah diverifikasi",
+    "RequestQueueProgress5Minutes": "Permintaan sedang dalam proses, coba lagi dalam 5 menit",
     "full_name": "nama lengkap",
     "current_address": "alamat rumah",
     "email_address": "alamat surat elektrik",
